@@ -1,5 +1,5 @@
 /**
- * Enumeración que Representa los Posibles Tipos de Torneos
+ * Enumeración que representa los posibles tipos de torneos
  * @author Área de programación UQ - Daniel Narvaez, Diego Flores, Esteban Maya
  * @since 2023-11
  * 

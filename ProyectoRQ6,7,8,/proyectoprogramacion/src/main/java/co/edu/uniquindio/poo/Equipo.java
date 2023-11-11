@@ -1,5 +1,5 @@
 /**
- * Registro que agrupa los datos de un Equipo
+ * Clase que representa un Equipo en un torneo
  * @author Área de programación UQ
  * @since 2023-09
  * 
@@ -27,8 +27,8 @@ public class Equipo {
     private Estadistica estadistica;
 
     public Equipo(String nombre, Persona representante, Estadistica estadistica) {
-        ASSERTION.assertion( nombre != null && !nombre.isBlank() , "El nombre es requerido");
-        ASSERTION.assertion( representante != null , "El representante es requerido");
+        ASSERTION.assertion(nombre != null && !nombre.isBlank(), "El nombre es requerido");
+        ASSERTION.assertion(representante != null, "El representante es requerido");
 
         this.nombre = nombre;
         this.isGanado = false;
@@ -36,9 +36,9 @@ public class Equipo {
         this.isEmpatado = false;
         this.representante = representante;
         this.estadistica = estadistica;
-        this.jugadores = new LinkedList<>(jugadores);
-        this.enfrentamientos = new LinkedList<>(enfrentamientos);
-       
+        this.jugadores = new LinkedList<>();
+        this.enfrentamientos = new LinkedList<>();
+
     }
 
     public String nombre() {
@@ -61,6 +61,10 @@ public class Equipo {
         return representante;
     }
 
+    public Estadistica getEstadistica() {
+        return estadistica;
+    }
+
     public Collection<Jugador> jugadores() {
         return Collections.unmodifiableCollection(jugadores);
     }
@@ -69,22 +73,45 @@ public class Equipo {
         return Collections.unmodifiableCollection(enfrentamientos);
     }
 
+    /**
+     * Registra un jugador en el equipo.
+     * 
+     * @param jugador Jugador a registrar.
+     */
     public void registrarJugador(Jugador jugador) {
         validarJugadorExiste(jugador);
         jugadores.add(jugador);
     }
 
-    public Optional<Jugador> buscarJugador(Jugador jugador){
-        Predicate<Jugador> nombreIgual = j->j.getNombre().equals(jugador.getNombre());
-        Predicate<Jugador> apellidoIgual = j->j.getApellido().equals(jugador.getApellido());
+    /**
+     * Busca un jugador en la lista de jugadores del equipo.
+     * 
+     * @param jugador Jugador a buscar.
+     * @return Un Optional que contiene el jugador si es encontrado, o un Optional vacío si no se encuentra.
+     */
+    public Optional<Jugador> buscarJugador(Jugador jugador) {
+        Predicate<Jugador> nombreIgual = j -> j.getNombre().equals(jugador.getNombre());
+        Predicate<Jugador> apellidoIgual = j -> j.getApellido().equals(jugador.getApellido());
         return jugadores.stream().filter(nombreIgual.and(apellidoIgual)).findAny();
     }
 
+    /**
+     * Valida que el jugador no esté ya registrado en el equipo.
+     * 
+     * @param jugador Jugador a validar.
+     */
     private void validarJugadorExiste(Jugador jugador) {
         boolean existeJugador = buscarJugador(jugador).isPresent();
-        ASSERTION.assertion( !existeJugador,"El jugador ya esta registrado");
+        ASSERTION.assertion(!existeJugador, "El jugador ya esta registrado");
     }
 
+    /**
+     * Actualiza el estado del enfrentamiento del equipo.
+     * 
+     * @param isGanado Indica si el equipo ganó el partido.
+     * @param isEmpatado Indica si el partido terminó en empate.
+     * @param isPerdido Indica si el equipo perdió el partido.
+     */
     public void actualizarEstadoEnfrentamiento(boolean isGanado, boolean isEmpatado, boolean isPerdido) {
         if (isGanado) {
             this.isGanado = true;
@@ -101,14 +128,16 @@ public class Equipo {
         }
     }
 
-    public Estadistica getEstadistica() {
-        return estadistica;
-    }
-
-    public Collection<Enfrentamiento> obtenerListaEnfrentamientosEquipoPorNombre(String nombre){
-        Predicate<Enfrentamiento> condicion1 = enfrentamiento -> enfrentamiento.getEquipo1().nombre.equals(nombre);
-        Predicate<Enfrentamiento> condicion2 = enfrentamiento -> enfrentamiento.getEquipo2().nombre.equals(nombre);
-        return enfrentamientos.stream().filter(condicion1.and(condicion2)).toList();
+    /**
+     * Obtiene la lista de enfrentamientos en los que participa el equipo por nombre del equipo.
+     * 
+     * @param nombre Nombre del equipo.
+     * @return Lista de enfrentamientos del equipo.
+     */
+    public Collection<Enfrentamiento> obtenerListaEnfrentamientosEquipoPorNombre(String nombre) {
+        Predicate<Enfrentamiento> condicion1 = enfrentamiento -> enfrentamiento.getVisitante().nombre.equals(nombre);
+        Predicate<Enfrentamiento> condicion2 = enfrentamiento -> enfrentamiento.getLocal().nombre.equals(nombre);
+        return enfrentamientos.stream().filter(condicion1.or(condicion2)).toList();
     }
 
 }

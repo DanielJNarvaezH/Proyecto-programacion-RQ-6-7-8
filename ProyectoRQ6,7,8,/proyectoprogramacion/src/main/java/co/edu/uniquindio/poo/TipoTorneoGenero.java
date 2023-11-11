@@ -1,5 +1,5 @@
 /**
- * Enumeración que Representa los Posibles Géneros de un Torneo
+ * Enumeración que representa los posibles géneros de un torneo
  * @author Área de programación UQ - Daniel Narvaez, Diego Flores, Esteban Maya
  * @since 2023-11
  * 

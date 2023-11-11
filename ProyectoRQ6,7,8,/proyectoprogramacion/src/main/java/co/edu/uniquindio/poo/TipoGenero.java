@@ -1,5 +1,5 @@
 /**
- * Enumeración que Representa los Posibles Tipos de Género de un Jugador
+ * Enumeración que representa los posibles tipos de género de un Jugador
  * @author Área de programación UQ - Daniel Narvaez, Diego Flores, Esteban Maya
  * @since 2023-11
  * 
